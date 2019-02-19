@@ -134,12 +134,6 @@ func (this *NFA) plus(next byte) {
 /* Print States for debugging purposes*/
 func (this NFA) printStates() {
 	for _, state := range this.states {
-		outEdges := ""
-		for _, edges := range state.outEdges {
-			for _, edge := range edges {
-				outEdges += fmt.Sprintf(" %q: %q->%q ", edge.char, edge.source.label, edge.destination.label)
-			}
-		}
-		fmt.Printf("State: %q; accept: %t; outEdges: %v; compositionStates : %v\n", state.label, state.accept, outEdges, state.compositionStates)
+		fmt.Print(printState(state))
 	}
 }
