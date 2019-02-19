@@ -2,6 +2,7 @@ package regex_parser
 
 import (
 	"fmt"
+	"sort"
 )
 
 type Edge struct {
@@ -69,10 +70,13 @@ func (this *State) addOutEdge(edge *Edge) {
 	@char
 */
 func (this State) findAllOutStates(char byte) StateMap {
+	states := make(StateMap, 0)
 	if edges, ok := this.outEdges[char]; ok {
-		return edges
+		for _, edge := range edges {
+			states[edge.destination.label] = edge.destination
+		}
 	}
-	return nil
+	return states
 }
 
 /*

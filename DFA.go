@@ -1,8 +1,7 @@
 package regex_parser
 
-import(
+import (
 	"fmt"
-	"sort"
 )
 
 type DFA struct {
@@ -11,10 +10,22 @@ type DFA struct {
 	startState *State
 }
 
-func NewDFA() *DFA {
+func BlankDFA() *DFA {
 	return &DFA{make(StateMap,0),make([]*State, 0),nil}
 }
 
+/*
+
+*/
+func NewDFA(nfa NFA) *DFA {
+	dfa := BlankDFA()
+	dfa.convert(nfa)
+	return dfa
+}
+
+/*
+	Converts a given @nfa into a @DFA.
+*/
 func (this *DFA) convert(nfa NFA) {
 	this.incomplete_states = append(this.incomplete_states, nfa.startState);
 	nfa.startState.compositionStates = nfa.startState.epsilonClosure()

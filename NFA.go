@@ -2,10 +2,7 @@ package regex_parser
 
 import (
 	"fmt"
-	"errors"
 )
-const EPSILON = 0
-const DOT = byte('.')
 
 type NFA struct {
 	input string
@@ -59,48 +56,6 @@ func (this *NFA) construct() {
 		}
 	}
 	this.currentState.setAccept(true)
-}
-
-
-func findNewTransitions(states StateMap, char byte) StateMap {
-	closed_states := make(StateMap,0)
-	for _, state := range states {
-		closed_states = Union(state.findAllOutStates(char), closed_states)
-	}
-	return closed_states
-}
-
-func epsilonClosure(states StateMap) StateMap {
-	closed_states := make(StateMap,0)
-	for _, state := range states {
-		closed_states = Union(state.epsilonClosure(), closed_states)
-	}
-	fmt.Println("epsilon closure", closed_states)
-	return closed_states
-}
-
-func isValid(pattern string) (bool, error) {
-	modifier_count := 0
-	for i := range pattern {
-		char := pattern[i]
-		switch char {
-		case '?':
-			fallthrough
-		case '*':
-			fallthrough
-		case '+':
-			modifier_count++
-			if modifier_count == 2 {
-				return false, errors.New("Two consecutive modifiers")
-			}
-			if  i == len(pattern) - 1 {
-				return false, errors.New("Modifier is the last character in the string")
-			}
-		default:
-			modifier_count = 0
-		}
-	}
-	return true, nil
 }
 
 /*

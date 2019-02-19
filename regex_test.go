@@ -94,8 +94,7 @@ func TestNFA(t *testing.T) {
 	var nfa *NFA
 	for _, c := range cases {
 		nfa = NewNFA(c.pattern)
-		dfa := NewDFA()
-		dfa.convert(*nfa)
+		dfa := NewDFA(*nfa)
 		output := dfa.match(c.str)
 		if output != c.expected {
 			nfa.printStates()
@@ -113,8 +112,7 @@ func TestDFA(t *testing.T) {
 	// nfa := NewNFA("+b"); 
 	// nfa.printStates()
 	fmt.Println("====")
-	// dfa := NewDFA()
-	// dfa.convert(*nfa)
+	// dfa := NewDFA(nfa)
 	// dfa.printStates()
 }
 
