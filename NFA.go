@@ -176,39 +176,6 @@ func (this *NFA) plus(next byte) {
 	this.star(next)
 }
 
-/*
-*/
-func (this NFA) match(str string) bool {
-	currentState := this.startState;
-
-	for i := 0; i < len(str); {
-		char := str[i]; 
-		if edge, ok := currentState.outEdges[char]; ok {
-			currentState = edge[0].destination
-			i++
-		} else if dot, ok := currentState.outEdges[DOT]; ok {
-			currentState = dot[0].destination
-			i++
-		} else if epsilon, ok := currentState.outEdges[EPSILON]; ok {
-			currentState = epsilon[0].destination;
-		} else {
-			return false
-		}
-	}
-
-	// Iterate through epsilon edges until successful 
-	epsilon, ok := currentState.outEdges[EPSILON]
-	for ok {
-		if currentState.isAccept() {
-			return true
-		}
-		currentState = epsilon[0].destination
-		epsilon, ok = currentState.outEdges[EPSILON]
-	}
-
-	return currentState.isAccept()
-}
-
 /* Print States for debugging purposes*/
 func (this NFA) printStates() {
 	for _, state := range this.states {

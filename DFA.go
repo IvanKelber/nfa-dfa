@@ -24,7 +24,7 @@ func (this *DFA) convert(nfa NFA) {
 		// fmt.Printf("Printing popped state: %q\n", printState(popped))
 		states := popped.compositionStates
 
-		dfaState := createDFAState(states)
+		dfaState := NewStateUnion(states)
 		if state, ok := this.complete_states[dfaState.label]; ok {
 			// fmt.Printf("State %q already exists. %p vs %p\n", dfaState.label, state, dfaState)
 			dfaState = state
@@ -37,7 +37,7 @@ func (this *DFA) convert(nfa NFA) {
 		this.complete_states[dfaState.label] = dfaState;
 		for char, _ := range nfa.alphabet {
 			transition := epsilonClosure(findNewTransitions(states, char))
-			newState := createDFAState(transition)
+			newState := NewStateUnion(transition)
 			// fmt.Printf("\tPrinting newDFAstate: %q\n", printState(newState))
 			// fmt.Printf("\t%q address: %p\n", newState.label, newState)
 
@@ -53,24 +53,6 @@ func (this *DFA) convert(nfa NFA) {
 		}
 		// fmt.Printf("Printing DFA state after edges: %q\n", printState(dfaState))
 	}
-}
-
-func createDFAState(states StateMap) *State {
-	newLabel := ""
-	accept := false
-	keys := make([]string, 0)
-	for key, _ := range states {
-		keys = append(keys, key)
-	}
-	sort.Strings(keys)
-	for _, label := range keys {
-		accept = accept || states[label].isAccept()
-		newLabel += label
-	}
-	state := NewState(newLabel)
-	state.compositionStates = states
-	state.setAccept(accept)
-	return state
 }
 
 func (this DFA) match(str string) bool {
@@ -100,17 +82,6 @@ func (this DFA) match(str string) bool {
 		}
 	}
 	return currentState.isAccept()
-}
-
-func printState(state *State) string {
-	outEdges := ""
-	for _, edges := range state.outEdges {
-		for _, edge := range edges {
-			outEdges += fmt.Sprintf(" %q: %q-%p => %q-%p ", edge.char, edge.source.label, edge.source, edge.destination.label, edge.destination)
-		}
-	}
-	return fmt.Sprintf("Address %p; State: %q; accept: %t; outEdges: %v;\n",state, state.label, state.accept, outEdges)
-
 }
 
 /* Print States for debugging purposes*/
