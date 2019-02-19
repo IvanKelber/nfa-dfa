@@ -2,7 +2,7 @@ package regex_parser
 
 import (
 	"testing"
-	// "fmt"
+	"fmt"
 )
 
 type MatchTest struct {
@@ -56,7 +56,7 @@ func TestNFA(t *testing.T) {
 		// {"*a","a", true},
 		// {"*a","", true},
 		// {"*a","aaaaaaaaaaa", true},
-		// {"*.", "Now this is the story all about how my life got flipped, turned upside down", true},
+		{"*.", "Now this is the story all about how my life got flipped, turned upside down", true},
 		// {"*.abc","roflmao",false},
 		// {"*.mao","roflmao",true},
 		// {"abc*.","abc",true},
@@ -83,7 +83,7 @@ func TestNFA(t *testing.T) {
 		// {"?a*b","aab",false},
 		// {"?a*b+c", "", false},
 		// {"?a*b+c","abc", true},
-		{"*.+.","a", true},
+		// {"*.+.","a", true},
 		// {"*.+.","", false},
 
     }
@@ -91,9 +91,13 @@ func TestNFA(t *testing.T) {
 	var nfa *NFA
 	for _, c := range cases {
 		nfa = NewNFA(c.pattern)
-		output := nfa.match(c.str)
+		dfa := NewDFA()
+		dfa.convert(*nfa)
+		output := dfa.match(c.str)
 		if output != c.expected {
-			nfa.printStates()
+			// nfa.printStates()
+			// fmt.Println("===========")
+			// dfa.printStates()
 			t.Errorf("NFA[pattern == %q].match(%q) == %t, expected %t",
 									c.pattern, c.str, output, c.expected)
 		}
@@ -101,3 +105,13 @@ func TestNFA(t *testing.T) {
 	// nfa.printStates()
 
 }
+
+func TestDFA(t *testing.T) {
+	// nfa := NewNFA("+b"); 
+	// nfa.printStates()
+	fmt.Println("====")
+	// dfa := NewDFA()
+	// dfa.convert(*nfa)
+	// dfa.printStates()
+}
+

@@ -11,12 +11,13 @@ type Edge struct {
 
 type State struct {
 	label string
-	outEdges, inEdges map[byte][]*Edge
+	outEdges map[byte][]*Edge
+	compositionStates StateMap
 	accept bool
 }
 
-func NewState(size int) *State {
-	return &State{createLabel(size),make(map[byte][]*Edge,0),make(map[byte][]*Edge,0),false}
+func NewState(label string) *State {
+	return &State{label,make(map[byte][]*Edge,0),make(StateMap,0),false}
 }
 
 func (this *State) setAccept(accept bool) {
@@ -34,13 +35,6 @@ func (this *State) addOutEdge(edge *Edge) {
 	this.outEdges[edge.char] = append(this.outEdges[edge.char], edge)
 }
 
-func (this *State) addInEdge(edge *Edge) {
-	if _, ok := this.inEdges[edge.char]; !ok {
-		this.inEdges[edge.char] = make([]*Edge,0)
-	}
-	this.inEdges[edge.char] = append(this.inEdges[edge.char], edge)
-}
-
 func (this State) findOutState(char byte) *State {
 	if edge, ok := this.outEdges[char]; ok {
 		return edge[0].destination
@@ -48,20 +42,21 @@ func (this State) findOutState(char byte) *State {
 	return nil
 }
 
-func (this State) findAllOutStates(char byte) map[string]*State {
-	states := make(map[string]*State, 0)
+func (this State) findAllOutStates(char byte) StateMap {
+	states := make(StateMap, 0)
 	if edges, ok := this.outEdges[char]; ok {
 		for _, edge := range edges {
 			states[edge.destination.label] = edge.destination
 		}
 	}
+	if char == EPSILON {
+		states[this.label] = &this
+	}
 	return states
 }
 
-func (this State) epsilonClosure() map[string]*State {
-	states := this.findAllOutStates(EPSILON);
-	states[this.label] = &this
-	return states
+func (this State) epsilonClosure() StateMap {
+	return this.findAllOutStates(EPSILON);
 }
 
 /* Utility function for numbering states */
