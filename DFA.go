@@ -4,9 +4,6 @@ import (
 	"fmt"
 )
 
-/*
-	@complete_state
-*/
 type DFA struct {
 	complete_states StateMap
 	startState *State

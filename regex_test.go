@@ -2,7 +2,6 @@ package regex_parser
 
 import (
 	"testing"
-	"fmt"
 )
 
 type MatchTest struct {
@@ -14,7 +13,6 @@ type ValidTest struct {
 	pattern string
 	expected bool
 }
-
 
 func TestValid(t *testing.T) {
 	cases := []ValidTest {
@@ -75,6 +73,7 @@ func TestNFA(t *testing.T) {
 		{"+aab","ab",false},
 		{"+.","",false},
 		{"+.","And I'd like to take a minute just sit right there ", true},
+		{"+.a","aa", true},
 		{"*a+b","ab",true},
 		{"*a+b","a",false},
 		{"*a+b","",false},
@@ -97,22 +96,9 @@ func TestNFA(t *testing.T) {
 		dfa := NewDFA(*nfa)
 		output := dfa.match(c.str)
 		if output != c.expected {
-			// nfa.printStates()
-			// fmt.Println("===========")
-			// dfa.printStates()
 			t.Errorf("NFA[pattern == %q].match(%q) == %t, expected %t",
 									c.pattern, c.str, output, c.expected)
 		}
 	}
-	// nfa.printStates()
-
-}
-
-func TestDFA(t *testing.T) {
-	// nfa := NewNFA("+b"); 
-	// nfa.printStates()
-	fmt.Println("====")
-	// dfa := NewDFA(nfa)
-	// dfa.printStates()
 }
 
