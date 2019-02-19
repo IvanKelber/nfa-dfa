@@ -63,13 +63,16 @@ func (this *DFA) convert(nfa NFA) {
 	}
 }
 
+/*
+	Starting at this.startState, we apply each character in @str
+	as a transition.  After every character is applied, if our 
+	state is an accept state we have matched.
+*/
 func (this DFA) match(str string) bool {
 	currentState := this.startState;
-	// this.printStates()
 	for i := 0; i < len(str); {
 		char := str[i]; 
 		if edge, ok := currentState.outEdges[char]; ok {
-			fmt.Printf("edge found.  traversing to %q\n", edge[0].destination.label)
 			currentState = edge[0].destination
 			i++
 		} else if dot, ok := currentState.outEdges[DOT]; ok {
