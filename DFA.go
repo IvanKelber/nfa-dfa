@@ -81,7 +81,6 @@ func (this DFA) match(str string) bool {
 		} else if epsilon, ok := currentState.outEdges[EPSILON]; ok {
 			currentState = epsilon[0].destination;
 		} else {
-			this.printStates()
 			return false
 		}
 	}

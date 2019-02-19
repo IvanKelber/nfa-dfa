@@ -97,9 +97,9 @@ func TestNFA(t *testing.T) {
 		dfa := NewDFA(*nfa)
 		output := dfa.match(c.str)
 		if output != c.expected {
-			nfa.printStates()
-			fmt.Println("===========")
-			dfa.printStates()
+			// nfa.printStates()
+			// fmt.Println("===========")
+			// dfa.printStates()
 			t.Errorf("NFA[pattern == %q].match(%q) == %t, expected %t",
 									c.pattern, c.str, output, c.expected)
 		}

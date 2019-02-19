@@ -1,7 +1,6 @@
 package regex_parser
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -88,15 +87,12 @@ func (this State) findAllOutStates(char byte) StateMap {
 func (this State) epsilonClosure() StateMap {
 	states := make(StateMap, 0)
 	if edges, ok := this.outEdges[EPSILON]; ok {
-		fmt.Println("start state: ", this.label)
 		for _, edge := range edges {
 			states[edge.destination.label] = edge.destination
-			fmt.Println("\trecursing into ", edge.destination.label)
 			states = Union(states, edge.destination.epsilonClosure())
 		}
 	}
 	states[this.label] = &this
-	fmt.Println(this.label, " epsilon closure: ", states)
 	return states
 }
 
