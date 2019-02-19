@@ -26,10 +26,10 @@ func (this *DFA) convert(nfa NFA) {
 
 		dfaState := createDFAState(states)
 		if state, ok := this.complete_states[dfaState.label]; ok {
-			// fmt.Printf("State %q already exists. %p vs %p\n", dfaState.label, state, dfaState)
+			fmt.Printf("State %q already exists. %p vs %p\n", dfaState.label, state, dfaState)
 			dfaState = state
 		}
-		// fmt.Printf("Printing DFA state before edges: %q\n", printState(dfaState))
+		fmt.Printf("Printing DFA state before edges: %q\n", printState(dfaState))
 
 		if this.startState == nil {
 			this.startState = dfaState
@@ -38,16 +38,20 @@ func (this *DFA) convert(nfa NFA) {
 		for char, _ := range nfa.alphabet {
 			transition := epsilonClosure(findNewTransitions(states, char))
 			newState := createDFAState(transition)
-			// fmt.Printf("\tPrinting newDFAstate: %q\n", printState(newState))
-			// fmt.Printf("\t%q address: %p\n", newState.label, newState)
-			edge := &Edge{char, dfaState, newState}
-			dfaState.addOutEdge(edge)
-			if _, ok := this.complete_states[newState.label]; !ok {
+			fmt.Printf("\tPrinting newDFAstate: %q\n", printState(newState))
+			fmt.Printf("\t%q address: %p\n", newState.label, newState)
+
+			if state, ok := this.complete_states[newState.label]; ok {
+				newState = state
+			} else {
 				this.incomplete_states = append(this.incomplete_states, newState)
 				this.complete_states[newState.label] = newState
 			}
+
+			edge := &Edge{char, dfaState, newState}
+			dfaState.addOutEdge(edge)
 		}
-		// fmt.Printf("Printing DFA state after edges: %q\n", printState(dfaState))
+		fmt.Printf("Printing DFA state after edges: %q\n", printState(dfaState))
 	}
 }
 
