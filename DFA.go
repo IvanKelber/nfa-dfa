@@ -73,10 +73,6 @@ func createDFAState(states StateMap) *State {
 	return state
 }
 
-func unionLabel(states StateMap) {
-	
-}
-
 func (this DFA) match(str string) bool {
 	currentState := this.startState;
 	// this.printStates()
@@ -90,7 +86,7 @@ func (this DFA) match(str string) bool {
 		// }
 		// fmt.Printf("current state: %q, edges: %q, current char %q,  edges: ",currentState.label, outEdges, char)
 		if edge, ok := currentState.outEdges[char]; ok {
-			// fmt.Printf("edge found.  traversing to %q\n", edge[0].destination.label)
+			fmt.Printf("edge found.  traversing to %q\n", edge[0].destination.label)
 			currentState = edge[0].destination
 			i++
 		} else if dot, ok := currentState.outEdges[DOT]; ok {
@@ -99,21 +95,10 @@ func (this DFA) match(str string) bool {
 		} else if epsilon, ok := currentState.outEdges[EPSILON]; ok {
 			currentState = epsilon[0].destination;
 		} else {
-			// this.printStates()
+			this.printStates()
 			return false
 		}
 	}
-
-	// Iterate through epsilon edges until successful 
-	epsilon, ok := currentState.outEdges[EPSILON]
-	for ok {
-		if currentState.isAccept() {
-			return true
-		}
-		currentState = epsilon[0].destination
-		epsilon, ok = currentState.outEdges[EPSILON]
-	}
-
 	return currentState.isAccept()
 }
 

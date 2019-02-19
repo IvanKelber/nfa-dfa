@@ -49,14 +49,22 @@ func (this State) findAllOutStates(char byte) StateMap {
 			states[edge.destination.label] = edge.destination
 		}
 	}
-	if char == EPSILON {
-		states[this.label] = &this
-	}
 	return states
 }
 
 func (this State) epsilonClosure() StateMap {
-	return this.findAllOutStates(EPSILON);
+	states := make(StateMap, 0)
+	if edges, ok := this.outEdges[EPSILON]; ok {
+		fmt.Println("start state: ", this.label)
+		for _, edge := range edges {
+			states[edge.destination.label] = edge.destination
+			fmt.Println("\trecursing into ", edge.destination.label)
+			states = Union(states, edge.destination.epsilonClosure())
+		}
+	}
+	states[this.label] = &this
+	fmt.Println(this.label, " epsilon closure: ", states)
+	return states
 }
 
 /* Utility function for numbering states */

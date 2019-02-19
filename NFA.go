@@ -71,7 +71,12 @@ func findNewTransitions(states StateMap, char byte) StateMap {
 }
 
 func epsilonClosure(states StateMap) StateMap {
-	return findNewTransitions(states, EPSILON)
+	closed_states := make(StateMap,0)
+	for _, state := range states {
+		closed_states = Union(state.epsilonClosure(), closed_states)
+	}
+	fmt.Println("epsilon closure", closed_states)
+	return closed_states
 }
 
 func isValid(pattern string) (bool, error) {
