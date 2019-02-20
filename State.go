@@ -9,6 +9,12 @@ type Edge struct {
 	source, destination *State
 }
 
+func NewEdge(char byte, source, destination *State) *Edge {
+	edge :=& Edge{char, source, destination}
+	source.addOutEdge(edge)
+	return edge
+}
+
 type State struct {
 	label string
 	outEdges map[byte][]*Edge

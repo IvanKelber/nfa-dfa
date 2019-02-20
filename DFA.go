@@ -55,8 +55,7 @@ func (this *DFA) convert(nfa NFA) {
 			}
 
 			// Attach poppedState to newState
-			edge := &Edge{transition, poppedState, newState}
-			poppedState.addOutEdge(edge)
+			NewEdge(transition, poppedState, newState)
 		}
 	}
 }
