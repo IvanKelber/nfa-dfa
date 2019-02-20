@@ -16,9 +16,10 @@ func BlankDFA() *DFA {
 /*
 	Given an @nfa return a DFA
 */
-func NewDFA(nfa NFA) *DFA {
+func NewDFA(pattern string) *DFA {
+	nfa := NewNFA(pattern)
 	dfa := BlankDFA()
-	dfa.convert(nfa)
+	dfa.convert(*nfa)
 	return dfa
 }
 

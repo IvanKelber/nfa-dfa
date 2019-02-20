@@ -33,7 +33,7 @@ func TestValid(t *testing.T) {
 	}
 }
 
-func TestNFA(t *testing.T) {
+func TestDFA(t *testing.T) {
     cases := []MatchTest {
 		{"a.c","abc",true},
 		{"a.c","a.c",true},
@@ -90,13 +90,11 @@ func TestNFA(t *testing.T) {
 		{"*.+.","I'll tell you how I became the prince of a town called Bel-Air", true},
     }
 
-	var nfa *NFA
 	for _, c := range cases {
-		nfa = NewNFA(c.pattern)
-		dfa := NewDFA(*nfa)
+		dfa := NewDFA(c.pattern)
 		output := dfa.match(c.str)
 		if output != c.expected {
-			t.Errorf("NFA[pattern == %q].match(%q) == %t, expected %t",
+			t.Errorf("DFA[pattern == %q].match(%q) == %t, expected %t",
 									c.pattern, c.str, output, c.expected)
 		}
 	}
