@@ -9,16 +9,17 @@ type DFA struct {
 	startState *State
 }
 
-func BlankDFA() *DFA {
+func blankDFA() *DFA {
 	return &DFA{make(StateMap,0),nil}
 }
 
 /*
 	Given an @nfa return a DFA
 */
-func NewDFA(nfa NFA) *DFA {
-	dfa := BlankDFA()
-	dfa.convert(nfa)
+func NewDFA(pattern string) *DFA {
+	nfa := NewNFA(pattern)
+	dfa := blankDFA()
+	dfa.convert(*nfa)
 	return dfa
 }
 
@@ -54,8 +55,7 @@ func (this *DFA) convert(nfa NFA) {
 			}
 
 			// Attach poppedState to newState
-			edge := &Edge{transition, poppedState, newState}
-			poppedState.addOutEdge(edge)
+			NewEdge(transition, poppedState, newState)
 		}
 	}
 }
@@ -65,7 +65,7 @@ func (this *DFA) convert(nfa NFA) {
 	as a transition.  After every character is applied, if our 
 	state is an accept state we have matched.
 */
-func (this DFA) match(str string) bool {
+func (this DFA) Match(str string) bool {
 	currentState := this.startState;
 	for i := 0; i < len(str); {
 		char := str[i]; 

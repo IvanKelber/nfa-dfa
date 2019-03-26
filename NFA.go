@@ -78,8 +78,7 @@ func (this *NFA) setPattern(pattern string) error {
  */
 func (this *NFA) concat(next byte) {
 	state := NewState(createLabel(this.size));
-	edge := &Edge{next, this.currentState, state}
-	this.currentState.addOutEdge(edge)
+	NewEdge(next, this.currentState, state)
 	this.currentState = state
 	this.states = append(this.states, state)
 	this.size++
@@ -91,10 +90,8 @@ func (this *NFA) concat(next byte) {
 */
 func (this *NFA) optional(next byte) {
 	state := NewState(createLabel(this.size));
-	edge := &Edge{next, this.currentState, state}
-	epsilon := &Edge{EPSILON, this.currentState, state}
-	this.currentState.addOutEdge(edge)
-	this.currentState.addOutEdge(epsilon)
+	NewEdge(next, this.currentState, state)
+	NewEdge(EPSILON, this.currentState, state)
 	this.currentState = state
 	this.states = append(this.states, state)
 	this.size++
@@ -108,12 +105,9 @@ func (this *NFA) optional(next byte) {
 */
 func (this *NFA) star(next byte) {
 	state := NewState(createLabel(this.size))
-	edge := &Edge{next, this.currentState, state}
-	epsilon := &Edge{EPSILON, this.currentState, state}
-	recursive := &Edge{next, state, state}
-	this.currentState.addOutEdge(edge)
-	this.currentState.addOutEdge(epsilon)
-	state.addOutEdge(recursive)
+	NewEdge(next, this.currentState, state)
+	NewEdge(EPSILON, this.currentState, state)
+	NewEdge(next, state, state)
 	this.currentState = state
 	this.states = append(this.states, state)
 	this.size++
